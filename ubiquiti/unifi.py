@@ -22,11 +22,11 @@ class API(object):
         """
         Initiates tha api with default settings if none other are set.
 
-        :param username: username for the controller user
-        :param password: password for the controller user
-        :param site: which site to connect to (Not the name you've given the site, but the url-defined name)
-        :param baseurl: where the controller is located
-        :param verify_ssl: Check if certificate is valid or not, throws warning if set to False
+        :param username: cloudkey username
+        :param password: cloudkey password
+        :param site: name of site (https://unifi:8443/manage/site/$THIS)
+        :param baseurl: controller URL
+        :param verify_ssl: Boolean to check the certificate validity (warns on False)
         """
         self._login_data['username'] = username
         self._login_data['password'] = password
