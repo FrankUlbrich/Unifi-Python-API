@@ -5,16 +5,16 @@ from typing import Pattern, Dict, Union
 
 
 class LoggedInException(Exception):
+    """LoggedInException."""
 
     def __init__(self, *args, **kwargs):
+        """Init function for LoggedInException."""
         super(LoggedInException, self).__init__(*args, **kwargs)
 
 
 class API(object):
-    """
-    Unifi API for the Unifi Controller.
+    """Unifi API for the Unifi Controller."""
 
-    """
     _login_data = {}
     _current_status_code = None
 
@@ -26,7 +26,7 @@ class API(object):
         :param password: cloudkey password
         :param site: name of site (https://unifi:8443/manage/site/$THIS)
         :param baseurl: controller URL
-        :param verify_ssl: Boolean to check the certificate validity (warns on False)
+        :param verify_ssl: toggle check of ssl cert validity (warns on False)
         """
         self._login_data['username'] = username
         self._login_data['password'] = password
