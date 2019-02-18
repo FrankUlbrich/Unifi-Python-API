@@ -154,6 +154,49 @@ class API(object):
         data = r.json()['data']
 
         return data[0]
+
+    def events(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
+        """
+        List site events.
+
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
+        :return: A list of events as dicts (see below for sample keys)
+        app_proto
+        datetime
+        dest_ip
+        dest_port
+        event_type
+        host
+        key
+        msg
+        proto
+        site_id
+        src_ip
+        src_mac
+        src_port
+        srcipCountry
+        subsystem
+        time
+        """
+        r = self._session.get("{}/api/s/{}/stat/event".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+
+        if self._current_status_code == 401:
+            raise LoggedInException("Invalid login, or login has expired")
+
+        data = r.json()['data']
+
+        if filters:
+            for term, value in filters.items():
+                value_re = value if isinstance(value, Pattern) else re.compile(value)
+
+                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+
+        if order_by:
+            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
+        return data
         if self._current_status_code == 401:
             raise LoggedInException("Invalid login, or login has expired")
 
