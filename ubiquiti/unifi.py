@@ -228,3 +228,89 @@ class API(object):
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
 
         return data
+
+    def port_forwarding(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
+        """
+        List forwarded ports.
+
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
+        :return: A list of forwarded ports as dicts (see below)
+        _id
+        dst_port
+        fwd
+        fwd_port
+        name
+        proto
+        site_id
+        src
+        """
+        r = self._session.get("{}/api/s/{}/rest/portforward".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+
+        if self._current_status_code == 401:
+            raise LoggedInException("Invalid login, or login has expired")
+
+        data = r.json()['data']
+
+        if filters:
+            for term, value in filters.items():
+                value_re = value if isinstance(value, Pattern) else re.compile(value)
+
+                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+
+        if order_by:
+            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
+        return data
+
+    def list_aps(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
+        """
+        List nearby access points (and identify potential rogue APs).
+
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
+        :return: A list of access_points as dicts (see below)
+        _id
+        age
+        ap_mac
+        band
+        bssid
+        bw
+        center_freq
+        channel
+        essid
+        freq
+        is_adhoc
+        is_rogue
+        is_ubnt
+        last_seen
+        noise
+        oui
+        radio
+        radio_name
+        report_time
+        rssi
+        rssi_age
+        security
+        signal
+        site_id
+        """
+        r = self._session.get("{}/api/s/{}/stat/rogueap".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+
+        if self._current_status_code == 401:
+            raise LoggedInException("Invalid login, or login has expired")
+
+        data = r.json()['data']
+
+        if filters:
+            for term, value in filters.items():
+                value_re = value if isinstance(value, Pattern) else re.compile(value)
+
+                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+
+        if order_by:
+            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
+        return data
