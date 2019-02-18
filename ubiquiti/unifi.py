@@ -124,6 +124,36 @@ class API(object):
         data = r.json()['data']
 
         return data[0]
+
+    def info(self) -> dict:
+        """
+        List site information.
+        :return: A dict of site information (see below for a sample)
+        autobackup
+        build
+        cloudkey_update_version
+        cloudkey_version
+        data_retention_days
+        debug_system
+        eol_pending_device_count
+        hostname
+        https_port
+        inform_port
+        ip_addrs
+        name
+        timezone
+        unifi_go_enabled
+        update_available
+        version
+        """
+        r = self._session.get("{}/api/s/{}/stat/sysinfo".format(self._baseurl, self._site, verify=False), data="json={}")
+        self._current_status_code = r.status_code
+        if self._current_status_code == 401:
+            raise LoggedInException("Invalid login, or login has expired")
+
+        data = r.json()['data']
+
+        return data[0]
         if self._current_status_code == 401:
             raise LoggedInException("Invalid login, or login has expired")
 
