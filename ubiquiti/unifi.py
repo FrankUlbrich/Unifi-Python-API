@@ -52,6 +52,12 @@ class API(object):
         """
         self.logout()
 
+    def _check_status_code(code):
+        status_codes = {400: "Invalid credentials",
+                        401: "Invalid login, or login has expired"}
+        if code in status_codes:
+            raise LoggedInException(status_codes[code])
+
     def login(self):
         """
         Log the user in.
