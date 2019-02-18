@@ -197,6 +197,22 @@ class API(object):
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
 
         return data
+
+    def routes(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
+        """
+        List site routes.
+
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
+        :return: A list of routes as dicts (see below for example data)
+        nh: [{'intf': 'eth0',
+              't': 'C>*'
+            }]
+        pfx: 192.168.1.0/24
+        """
+        r = self._session.get("{}/api/s/{}/stat/routing".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+
         if self._current_status_code == 401:
             raise LoggedInException("Invalid login, or login has expired")
 
