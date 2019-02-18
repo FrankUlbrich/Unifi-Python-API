@@ -37,16 +37,16 @@ class API(object):
 
     def __enter__(self):
         """
-        Contextmanager entry handle
+        Contextmanager entry handle.
 
-        :return: isntance object of class
+        :return: instance object of class
         """
         self.login()
         return self
 
     def __exit__(self, *args):
         """
-        Contextmanager exit handle
+        Contextmanager exit handle.
 
         :return: None
         """
@@ -54,7 +54,7 @@ class API(object):
 
     def login(self):
         """
-        Log the user in
+        Log the user in.
 
         :return: None
         """
@@ -64,7 +64,7 @@ class API(object):
 
     def logout(self):
         """
-        Log the user out
+        Log the user out.
 
         :return: None
         """
@@ -73,7 +73,7 @@ class API(object):
 
     def list_clients(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
         """
-        List all available clients from the api
+        List all available clients from the api.
 
         :param filters: dict with valid key, value pairs, string supplied is compiled to a regular expression
         :param order_by: order by a valid client key, defaults to '_id' if key is not found
