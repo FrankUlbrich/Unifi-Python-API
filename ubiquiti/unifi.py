@@ -65,8 +65,7 @@ class API(object):
         :return: None
         """
         self._current_status_code = self._session.post("{}/api/login".format(self._baseurl), data=json.dumps(self._login_data), verify=self._verify_ssl).status_code
-        if self._current_status_code == 400:
-            raise LoggedInException("Failed to log in to api with provided credentials")
+        self._check_status_code(self._current_status_code)
 
     def logout(self):
         """
@@ -85,12 +84,9 @@ class API(object):
         :param order_by: order by a key; defaults to '_id'
         :return: A list of clients on the format of a dict
         """
-
         r = self._session.get("{}/api/s/{}/stat/sta".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -108,9 +104,10 @@ class API(object):
     def health(self) -> dict:
         """
         List site health information.
+
         :return: A dict of network health information (see below)
         num_adopted
-        num_ap        
+        num_ap
         num_disabled
         num_disconnected
         num_guest
@@ -124,8 +121,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/stat/health".format(self._baseurl, self._site, verify=False), data="json={}")
         self._current_status_code = r.status_code
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -134,6 +130,7 @@ class API(object):
     def info(self) -> dict:
         """
         List site information.
+
         :return: A dict of site information (see below for a sample)
         autobackup
         build
@@ -154,8 +151,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/stat/sysinfo".format(self._baseurl, self._site, verify=False), data="json={}")
         self._current_status_code = r.status_code
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -187,9 +183,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/stat/event".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -218,9 +212,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/stat/routing".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -253,9 +245,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/rest/portforward".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -304,9 +294,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/stat/rogueap".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
@@ -340,9 +328,7 @@ class API(object):
         """
         r = self._session.get("{}/api/s/{}/rest/wlanconf".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-
-        if self._current_status_code == 401:
-            raise LoggedInException("Invalid login, or login has expired")
+        self._check_status_code(self._current_status_code)
 
         data = r.json()['data']
 
