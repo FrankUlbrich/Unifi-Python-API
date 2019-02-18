@@ -75,8 +75,8 @@ class API(object):
         """
         List all available clients from the api.
 
-        :param filters: dict with valid key, value pairs, string supplied is compiled to a regular expression
-        :param order_by: order by a valid client key, defaults to '_id' if key is not found
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
         :return: A list of clients on the format of a dict
         """
 
