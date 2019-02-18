@@ -82,7 +82,22 @@ class API(object):
 
         r = self._session.get("{}/api/s/{}/stat/sta".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
         self._current_status_code = r.status_code
-        
+
+        if self._current_status_code == 401:
+            raise LoggedInException("Invalid login, or login has expired")
+
+        data = r.json()['data']
+
+        if filters:
+            for term, value in filters.items():
+                value_re = value if isinstance(value, Pattern) else re.compile(value)
+
+                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+
+        if order_by:
+            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
+        return data
         if self._current_status_code == 401:
             raise LoggedInException("Invalid login, or login has expired")
 
