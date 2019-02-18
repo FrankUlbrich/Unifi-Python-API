@@ -98,6 +98,32 @@ class API(object):
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
 
         return data
+
+    def health(self) -> dict:
+        """
+        List site health information.
+        :return: A dict of network health information (see below)
+        num_adopted
+        num_ap        
+        num_disabled
+        num_disconnected
+        num_guest
+        num_iot
+        num_pending
+        num_user
+        rx_bytes-r
+        status
+        subsystem
+        tx_bytes-r
+        """
+        r = self._session.get("{}/api/s/{}/stat/health".format(self._baseurl, self._site, verify=False), data="json={}")
+        self._current_status_code = r.status_code
+        if self._current_status_code == 401:
+            raise LoggedInException("Invalid login, or login has expired")
+
+        data = r.json()['data']
+
+        return data[0]
         if self._current_status_code == 401:
             raise LoggedInException("Invalid login, or login has expired")
 
