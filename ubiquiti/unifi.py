@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+""" Control a Unifi Controller via Python"""
 from requests import Session
 import json
 import re
