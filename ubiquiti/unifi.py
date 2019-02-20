@@ -2,6 +2,7 @@
 """ Control a Unifi Controller via Python"""
 from requests import Session
 import json
+import os
 import re
 from typing import Pattern, Dict, Union
 
@@ -36,6 +37,10 @@ class API(object):
         self._verify_ssl = verify_ssl
         self._baseurl = baseurl
         self._session = Session()
+
+        if not verify_ssl and os.environ.get('IGNORE_SSL_WARNING', False):
+            import warnings
+            warnings.filterwarnings("ignore")  # Suppress SSL warnings
 
     def __enter__(self):
         """
