@@ -23,7 +23,7 @@ class API(object):
 
     def __init__(self, username: str="ubnt", password: str="ubnt", site: str="default", baseurl: str="https://unifi:8443", verify_ssl: bool=True):
         """
-        Initiates tha api with default settings if none other are set.
+        Initiate the api with defaults if unset.
 
         :param username: cloudkey username
         :param password: cloudkey password
