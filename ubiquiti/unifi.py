@@ -52,10 +52,15 @@ class API(object):
         """
         self.logout()
 
-    def _check_status_code(code):
+    def _check_status_code(self,code):
         status_codes = {400: "Invalid credentials",
                         401: "Invalid login, or login has expired"}
-        if code in status_codes:
+        if code == 401:
+            try:
+                api.login()
+            except ubiquiti.unifi.LoggedInException:
+                raise
+        elif code in status_codes:
             raise LoggedInException(status_codes[code])
 
     def login(self):
