@@ -323,7 +323,7 @@ class API(object):
 
     def wlan_config(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
         """
-        List wireless configuration
+        List wireless configuration.
 
         :param filters: dict of k/v pairs; string is compiled to regex
         :param order_by: order by a key; defaults to '_id'
