@@ -98,6 +98,34 @@ class API(object):
         self._session.get("{}/logout".format(self._baseurl))
         self._session.close()
 
+    def self(self) -> dict:
+        """
+        List data about the current caller.
+
+        :return: A dict of information about the caller (see below)
+        admin_id: 5bf09832e9875059b0390a9
+        device_id: FC000390839999902
+        email: none@none.com
+        email_alert_enabled: True
+        email_alert_grouping_delay: 60
+        email_alert_grouping_enabled: True
+        html_email_enabled: True
+        is_local: True
+        is_professional_installer: False
+        is_super: False
+        last_site_name: default
+        name: monitoring
+        requires_new_password: False
+        super_site_permissions: ['API_STAT_DEVICE_ACCESS_SUPER_SITE_PENDING', 'API_WIDGET_OS_STATS']
+        ui_settings: {'dashboardConfig': {'lastActiveDashboardId': '5bf09832e9875059b0390a9'}}
+        """
+        r = self._session.get("{}/api/self".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+        self._check_status_code(self._current_status_code)
+
+        data = r.json()['data']
+        return data[0]
+
     def list_clients(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
         """
         List all available clients from the api.
