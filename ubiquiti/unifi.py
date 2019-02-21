@@ -64,9 +64,8 @@ class API(object):
                         401: "Invalid login, or login has expired"}
         if code == 401:
             try:
-                api.login()
-            except ubiquiti.unifi.LoggedInException:
-                raise
+                self.login()
+            except LoggedInException:
         elif code in status_codes:
             raise LoggedInException(status_codes[code])
 
