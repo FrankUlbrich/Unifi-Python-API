@@ -376,6 +376,34 @@ class API(object):
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
 
         return data
+
+    def setting(self, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
+        """"
+        List device settings.
+
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
+        :return: A list of settings as dicts (see below for example, though 
+                 note that each list element is unique in terms of keys
+
+        _id
+        advanced_feature_enabled
+        alert_enabled
+        key
+        led_enabled
+        site_id
+        unifi_idp_enabled
+
+        """
+        r = self._session.get("{}/api/s/{}/rest/setting".format(self._baseurl, self._site, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+        self._check_status_code(self._current_status_code)
+
+        data = r.json()['data']
+
+        if filters:
+            data = _filter(filters, data)
+
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
 
