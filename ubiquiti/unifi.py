@@ -70,6 +70,16 @@ class API(object):
         elif code in status_codes:
             raise LoggedInException(status_codes[code])
 
+    def _filter(self, filters: Dict[str, Union[str, Pattern]], data: list) -> list:
+        """
+        Apply a set of filters to data
+        """
+        for term, value in filters.items():
+                value_re = value if isinstance(value, Pattern) else re.compile(value)
+
+                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+        return data
+
     def login(self):
         """
         Log the user in.
@@ -103,10 +113,7 @@ class API(object):
         data = r.json()['data']
 
         if filters:
-            for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
-
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+            _filter(filters, data)
 
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
@@ -200,10 +207,7 @@ class API(object):
         data = r.json()['data']
 
         if filters:
-            for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
-
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+            self._filter(filters)
 
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
@@ -229,10 +233,7 @@ class API(object):
         data = r.json()['data']
 
         if filters:
-            for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
-
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+            data = _filter(filters, data)
 
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
@@ -262,10 +263,7 @@ class API(object):
         data = r.json()['data']
 
         if filters:
-            for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
-
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+            data = _filter(filters, data)
 
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
@@ -311,10 +309,12 @@ class API(object):
         data = r.json()['data']
 
         if filters:
-            for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
+            data = _filter(filters, data)
 
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+        if order_by:
+            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
+        return data
 
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
@@ -345,10 +345,7 @@ class API(object):
         data = r.json()['data']
 
         if filters:
-            for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
-
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+            data = _filter(filters, data)
 
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
