@@ -344,6 +344,38 @@ class API(object):
 
         return data
 
+    def list_sites(self, verbose=False, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
+        """
+        Lists all sites on cloudkey.
+
+        :param verbose: return more detailed information on each site
+        :param filters: dict of k/v pairs; string is compiled to regex
+        :param order_by: order by a key; defaults to '_id'
+        :return: A list of sites as dicts (see below)
+        _id: 98098be20fe9023d
+        attr_hidden_id: default
+        attr_no_delete: True
+        desc: test site
+        name: default
+        role: readonly
+        """
+        if verbose:
+            level = 'stat'
+        else:
+            level = 'self'
+        r = self._session.get("{}/api/{}/sites".format(self._baseurl, level, verify=self._verify_ssl), data="json={}")
+        self._current_status_code = r.status_code
+        self._check_status_code(self._current_status_code)
+
+        data = r.json()['data']
+
+        if filters:
+            data = _filter(filters, data)
+
+        if order_by:
+            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
+        return data
         if order_by:
             data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
 
