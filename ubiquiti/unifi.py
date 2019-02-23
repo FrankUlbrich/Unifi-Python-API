@@ -61,11 +61,13 @@ class API(object):
 
     def _check_status_code(self,code):
         status_codes = {400: "Invalid credentials",
-                        401: "Invalid login, or login has expired"}
+                        401: "Invalid login, or login has expired",
+                        403: "Current user not authorized to perform action"}
         if code == 401:
             try:
                 self.login()
             except LoggedInException:
+                raise LoggedInException(status_codes[code])
         elif code in status_codes:
             raise LoggedInException(status_codes[code])
 
