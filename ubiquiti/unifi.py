@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Control a Unifi Controller via Python"""
+""" Control a Unifi Controller via Python."""
 from requests import Session
 import json
 import os
@@ -59,7 +59,7 @@ class API(object):
         """
         self.logout()
 
-    def _check_status_code(self,code):
+    def _check_status_code(self, code):
         status_codes = {400: "Invalid credentials",
                         401: "Invalid login, or login has expired",
                         403: "Current user not authorized to perform action"}
@@ -72,13 +72,11 @@ class API(object):
             raise LoggedInException(status_codes[code])
 
     def _filter(self, filters: Dict[str, Union[str, Pattern]], data: list) -> list:
-        """
-        Apply a set of filters to data
-        """
+        """Apply a set of filters to data."""
         for term, value in filters.items():
-                value_re = value if isinstance(value, Pattern) else re.compile(value)
+            value_re = value if isinstance(value, Pattern) else re.compile(value)
 
-                data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
+            data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
         return data
 
     def login(self):
