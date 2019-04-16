@@ -97,6 +97,18 @@ class API(object):
         self._session.get("{}/logout".format(self._baseurl))
         self._session.close()
 
+    def backup(self) -> None:
+        """Backup settings to a fixed location on filesystem. (Where?!)."""
+        payload = {'cmd': 'backup'}
+        r = self._session.post(
+            "{}/api/s/{}/cmd/system".format(
+                self._baseurl, self._site),
+            data=payload,
+            verify=self._verify_ssl)
+        self._current_status_code = r.status_code
+        if r.status_code == 401:
+            self._check_status_code(403)
+
     def self(self) -> dict:
         """
         List data about the current caller.
