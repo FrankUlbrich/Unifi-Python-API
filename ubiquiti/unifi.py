@@ -79,6 +79,9 @@ class API(object):
             data = [x for x in data if term in x.keys() and re.fullmatch(value_re, x[term])]
         return data
 
+    def _order_by(data, order_by):
+        return sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+
     def login(self):
         """
         Log the user in.
@@ -155,7 +158,7 @@ class API(object):
             _filter(filters, data)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
@@ -249,7 +252,7 @@ class API(object):
             self._filter(filters)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
@@ -275,7 +278,7 @@ class API(object):
             data = _filter(filters, data)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
@@ -305,7 +308,7 @@ class API(object):
             data = _filter(filters, data)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
@@ -351,13 +354,13 @@ class API(object):
             data = _filter(filters, data)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
     def list_sites(self, verbose=False, filters: Dict[str, Union[str, Pattern]]=None, order_by: str=None) -> list:
         """
-        Lists all sites on cloudkey.
+        List all sites on cloudkey.
 
         :param verbose: return more detailed information on each site
         :param filters: dict of k/v pairs; string is compiled to regex
@@ -384,7 +387,7 @@ class API(object):
             data = _filter(filters, data)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
@@ -416,7 +419,7 @@ class API(object):
             data = _filter(filters, data)
 
         if order_by:
-            data = sorted(data, key=lambda x: x[order_by] if order_by in x.keys() else x['_id'])
+            data = _order_by(data, order_by)
 
         return data
 
